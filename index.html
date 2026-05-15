@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShohMarket - Online Tijorat Do'koni</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>ShohMarket</h1>
+            </div>
+            <nav class="navbar">
+                <a href="#home">Bosh sahifa</a>
+                <a href="#products">Mahsulotlar</a>
+                <a href="#about">Biz haqida</a>
+                <a href="#contact">Aloqa</a>
+            </nav>
+            <div class="header-right">
+                <input type="text" id="searchInput" placeholder="Mahsulot qidirish..." class="search-box">
+                <button class="cart-btn" onclick="toggleCart()">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                <button class="user-btn" onclick="toggleAuth()">👤</button>
+            </div>
+        </div>
+    </header>
+
+    
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2>Xush kelibsiz ShohMarket ga!</h2>
+            <p>Eng yaxshi narxlarda sifatli mahsulotlar</p>
+            <button class="cta-btn" onclick="scrollToProducts()">Xarid boshlash</button>
+        </div>
+    </section>
+
+  
+    <section class="category-section">
+        <div class="container">
+            <h3>Kategoriyalar</h3>
+            <div class="category-filter">
+                <button class="cat-btn active" onclick="filterCategory('all')">Barchasi</button>
+                <button class="cat-btn" onclick="filterCategory('elektronika')">Elektronika</button>
+                <button class="cat-btn" onclick="filterCategory('kiyim')">Kiyim</button>
+                <button class="cat-btn" onclick="filterCategory('oziqvand')">Oziqvand</button>
+                <button class="cat-btn" onclick="filterCategory('kitoblar')">Kitoblar</button>
+                <button class="cat-btn" onclick="filterCategory('sport')">Sport</button>
+            </div>
+        </div>
+    </section>
+
+  
+    <section class="products-section" id="products">
+        <div class="container">
+            <h2>Bizning Mahsulotlar</h2>
+            <div class="sort-controls">
+                <label>Saralash:</label>
+                <select id="sortSelect" onchange="sortProducts()">
+                    <option value="default">Standart</option>
+                    <option value="price-low">Narx (Past → Yuqori)</option>
+                    <option value="price-high">Narx (Yuqori → Past)</option>
+                    <option value="name">Nom bo'yicha (A-Z)</option>
+                    <option value="rating">Reyting bo'yicha</option>
+                </select>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                
+            </div>
+        </div>
+    </section>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Xarid Savatchasi</h3>
+            <button class="close-cart" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Savatchа bo'sh</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Jami:</strong>
+                <span id="totalPrice">0 so'm</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Buyurtma berish</button>
+        </div>
+    </div>
+
+    
+    <div class="auth-modal" id="authModal">
+        <div class="auth-content">
+            <button class="close-auth" onclick="toggleAuth()">✕</button>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">Kirish</button>
+                <button class="auth-tab" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Parol" required>
+                <button type="submit">Kirish</button>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <input type="text" placeholder="To'liq ism" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Parol" required>
+                <input type="password" placeholder="Parolni takrorlash" required>
+                <button type="submit">Ro'yxatdan o'tish</button>
+            </form>
+        </div>
+    </div>
+
+    
+    <section class="about-section" id="about">
+        <div class="container">
+            <h2>Biz haqida</h2>
+            <p>ShohMarket - Sizning ishonchli onlayn xaridingiz hamrohimiz. Biz eng yaxshi narxlarda sifatli mahsulotlarni taqdim etamiz.</p>
+        </div>
+    </section>
+
+   
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <h2>Aloqa</h2>
+            <p>Email: shohmarket.uz@gmail.com</p>
+            <p>Telefon: +998 99 360 79 83</p>
+            <p>Manzil: Tashkent, O'zbekiston</p>
+        </div>
+    </section>
+
+   
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 ShohMarket. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
