@@ -22,11 +22,17 @@
             </nav>
             <div class="header-right">
                 <input type="text" id="searchInput" placeholder="Mahsulot qidirish..." class="search-box">
+                <select id="languageSelect" onchange="changeLanguage(this.value)" class="lang-select">
+                    <option value="uz">🇺🇿 O'zbekcha</option>
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="en">🇺🇸 English</option>
+                </select>
                 <button class="cart-btn" onclick="toggleCart()">
                     <span class="cart-icon">🛒</span>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
                 <button class="user-btn" onclick="toggleProfile()">👤</button>
+                <button class="theme-btn" onclick="toggleDarkMode()">🌙</button>
             </div>
         </div>
     </header>
@@ -34,16 +40,16 @@
     
     <section class="hero" id="home">
         <div class="hero-content">
-            <h2>Xush kelibsiz ShohMarket ga!</h2>
-            <p>Eng yaxshi narxlarda sifatli mahsulotlar</p>
-            <button class="cta-btn" onclick="scrollToProducts()">Xarid boshlash</button>
+            <h2 data-i18n="hero-title">Xush kelibsiz ShohMarket ga!</h2>
+            <p data-i18n="hero-subtitle">Eng yaxshi narxlarda sifatli mahsulotlar</p>
+            <button class="cta-btn" onclick="scrollToProducts()" data-i18n="shop-btn">Xarid boshlash</button>
         </div>
     </section>
 
   
     <section class="category-section">
         <div class="container">
-            <h3>Kategoriyalar</h3>
+            <h3 data-i18n="categories">Kategoriyalar</h3>
             <div class="category-filter">
                 <button class="cat-btn active" onclick="filterCategory('all')">Barchasi</button>
                 <button class="cat-btn" onclick="filterCategory('elektronika')">Elektronika</button>
@@ -62,9 +68,9 @@
   
     <section class="products-section" id="products">
         <div class="container">
-            <h2>Bizning Mahsulotlar</h2>
+            <h2 data-i18n="products">Bizning Mahsulotlar</h2>
             <div class="sort-controls">
-                <label>Saralash:</label>
+                <label data-i18n="sort">Saralash:</label>
                 <select id="sortSelect" onchange="sortProducts()">
                     <option value="default">Standart</option>
                     <option value="price-low">Narx (Past → Yuqori)</option>

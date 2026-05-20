@@ -1532,3 +1532,97 @@ body {
     border: 2px solid var(--border-color);
     min-height: 300px;
 }
+
+/* Theme Toggle Button */
+.theme-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.theme-btn:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: rotate(20deg);
+}
+
+/* Language Select */
+.lang-select {
+    padding: 10px 15px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.lang-select:hover,
+.lang-select:focus {
+    background: rgba(255, 255, 255, 0.25);
+    outline: none;
+}
+
+.lang-select option {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background: #0d0d0d;
+}
+
+body.dark-mode .header,
+body.dark-mode .hero,
+body.dark-mode .contact-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+body.dark-mode .category-section,
+body.dark-mode .about-section {
+    background: #1a1a1a;
+}
+
+body.dark-mode .product-card {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+}
+
+body.dark-mode .product-card:hover {
+    background: #2a2a2a;
+    box-shadow: 0 12px 32px rgba(255, 107, 53, 0.2);
+}
+
+body.dark-mode .cart-sidebar {
+    background: #1a1a1a;
+}
+
+body.dark-mode .auth-content,
+body.dark-mode .payment-content,
+body.dark-mode .review-content,
+body.dark-mode .profile-content {
+    background: #2a2a2a;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background: #1a1a1a;
+    color: white;
+    border-color: #3a3a3a;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #808080;
+}

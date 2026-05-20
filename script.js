@@ -653,5 +653,177 @@ function addProduct() {
     showNotification('Yangi mahsulot qo\'shish formasi tez orada!');
 }
 
-// Admin button in console for demo
-window.openAdmin = () => toggleAdmin();
+// Performance Optimization
+const imageCache = new Map();
+let scrollTimeout;
+
+function lazyLoadImages() {
+    const images = document.querySelectorAll('img[data-src]');
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                observer.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Debounce scroll events
+function optimizeScrolling() {
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) {
+            window.cancelAnimationFrame(scrollTimeout);
+        }
+        scrollTimeout = window.requestAnimationFrame(() => {
+            // Performance-critical scroll code here
+        });
+    }, { passive: true });
+}
+
+// Cache products locally
+function cacheProducts() {
+    localStorage.setItem('productsCache', JSON.stringify({
+        data: products,
+        timestamp: Date.now()
+    }));
+}
+
+function getCachedProducts() {
+    const cached = localStorage.getItem('productsCache');
+    if (cached) {
+        const { data, timestamp } = JSON.parse(cached);
+        // Cache valid for 1 hour
+        if (Date.now() - timestamp < 3600000) {
+            return data;
+        }
+    }
+    return null;
+}
+
+// Minify animations
+document.addEventListener('DOMContentLoaded', () => {
+    if (!getCachedProducts()) {
+        cacheProducts();
+    }
+    lazyLoadImages();
+    optimizeScrolling();
+});
+
+// Dark Mode
+let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+function toggleDarkMode() {
+    isDarkMode = !isDarkMode;
+    localStorage.setItem('darkMode', isDarkMode);
+    applyDarkMode();
+}
+
+function applyDarkMode() {
+    const root = document.documentElement;
+    const btn = document.querySelector('.theme-btn');
+    
+    if (isDarkMode) {
+        root.style.setProperty('--light-bg', '#1a1a1a');
+        root.style.setProperty('--text-dark', '#ffffff');
+        root.style.setProperty('--text-light', '#b0b0b0');
+        root.style.setProperty('--border-color', '#333333');
+        document.body.style.background = '#0d0d0d';
+        btn.textContent = '☀️';
+        btn.style.background = 'rgba(255, 255, 255, 0.2)';
+    } else {
+        root.style.setProperty('--light-bg', '#f0f4ff');
+        root.style.setProperty('--text-dark', '#1a2332');
+        root.style.setProperty('--text-light', '#687588');
+        root.style.setProperty('--border-color', '#d0d9f7');
+        document.body.style.background = '#ffffff';
+        btn.textContent = '🌙';
+        btn.style.background = '';
+    }
+    
+    showNotification(isDarkMode ? '🌙 Dark mode yondi' : '☀️ Light mode yondi');
+}
+
+// Apply dark mode on load
+window.addEventListener('load', () => {
+    if (isDarkMode) applyDarkMode();
+});
+
+// Multilingual Translations
+const translations = {
+    uz: {
+        'search-placeholder': 'Mahsulot qidirish...',
+        'hero-title': 'Xush kelibsiz ShohMarket ga!',
+        'hero-subtitle': 'Eng yaxshi narxlarda sifatli mahsulotlar',
+        'shop-btn': 'Xarid boshlash',
+        'categories': 'Kategoriyalar',
+        'products': 'Bizning Mahsulotlar',
+        'sort': 'Saralash:',
+        'cart': 'Xarid Savatchasi',
+        'checkout': 'Buyurtma berish',
+        'about': 'Biz haqida',
+        'contact': 'Aloqa',
+        'add-to-cart': 'Savatchaga qo\'sh'
+    },
+    ru: {
+        'search-placeholder': 'Поиск товаров...',
+        'hero-title': 'Добро пожаловать на ShohMarket!',
+        'hero-subtitle': 'Качественные товары по лучшим ценам',
+        'shop-btn': 'Начать покупки',
+        'categories': 'Категории',
+        'products': 'Наши товары',
+        'sort': 'Сортировка:',
+        'cart': 'Корзина',
+        'checkout': 'Оформить заказ',
+        'about': 'О нас',
+        'contact': 'Контакты',
+        'add-to-cart': 'В корзину'
+    },
+    en: {
+        'search-placeholder': 'Search products...',
+        'hero-title': 'Welcome to ShohMarket!',
+        'hero-subtitle': 'Quality products at the best prices',
+        'shop-btn': 'Start Shopping',
+        'categories': 'Categories',
+        'products': 'Our Products',
+        'sort': 'Sort:',
+        'cart': 'Shopping Cart',
+        'checkout': 'Checkout',
+        'about': 'About Us',
+        'contact': 'Contact',
+        'add-to-cart': 'Add to Cart'
+    }
+};
+
+let currentLanguage = localStorage.getItem('language') || 'uz';
+
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    updateLanguage();
+    showNotification(`🌍 Til o'zgartirildi: ${lang.toUpperCase()}`);
+}
+
+function updateLanguage() {
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.dataset.i18n;
+        const translation = translations[currentLanguage];
+        if (translation && translation[key]) {
+            if (element.tagName === 'INPUT') {
+                element.placeholder = translation[key];
+            } else {
+                element.textContent = translation[key];
+            }
+        }
+    });
+}
+
+// Apply language on load
+window.addEventListener('load', () => {
+    document.getElementById('languageSelect').value = currentLanguage;
+    updateLanguage();
+});
