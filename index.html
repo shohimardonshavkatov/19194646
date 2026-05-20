@@ -26,7 +26,7 @@
                     <span class="cart-icon">🛒</span>
                     <span class="cart-count" id="cartCount">0</span>
                 </button>
-                <button class="user-btn" onclick="toggleAuth()">👤</button>
+                <button class="user-btn" onclick="toggleProfile()">👤</button>
             </div>
         </div>
     </header>
@@ -51,6 +51,10 @@
                 <button class="cat-btn" onclick="filterCategory('oziqvand')">Oziqvand</button>
                 <button class="cat-btn" onclick="filterCategory('kitoblar')">Kitoblar</button>
                 <button class="cat-btn" onclick="filterCategory('sport')">Sport</button>
+                <button class="cat-btn" onclick="filterCategory('savdo')">Savdo</button>
+                <button class="cat-btn" onclick="filterCategory('fashion')">Fashion</button>
+                <button class="cat-btn" onclick="filterCategory('aksessuarlar')">Aksessuarlar</button>
+                <button class="cat-btn" onclick="filterCategory('kosmetika')">Kosmetika</button>
             </div>
         </div>
     </section>
@@ -118,6 +122,134 @@
     </div>
 
     
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <h3>Admin Panel</h3>
+            </div>
+            <nav class="admin-nav">
+                <button class="admin-nav-item active" onclick="switchAdmin('dashboard')">📊 Dashboard</button>
+                <button class="admin-nav-item" onclick="switchAdmin('products')">📦 Mahsulotlar</button>
+                <button class="admin-nav-item" onclick="switchAdmin('orders')">📋 Buyurtmalar</button>
+                <button class="admin-nav-item" onclick="switchAdmin('users')">👥 Foydalanuvchilar</button>
+                <button class="admin-nav-item" onclick="switchAdmin('analytics')">📈 Statistika</button>
+                <button class="admin-nav-item" onclick="closeAdmin()">🚪 Chiqish</button>
+            </nav>
+        </div>
+
+        <div class="admin-content">
+            <button class="admin-close" onclick="closeAdmin()">✕</button>
+            
+            <div id="dashboardTab" class="admin-tab active">
+                <h2>Dashboard</h2>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-info">
+                            <p>Mahsulotlar</p>
+                            <h3 id="totalProducts">21</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <p>Daromad</p>
+                            <h3>0 so'm</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <p>Foydalanuvchilar</p>
+                            <h3>1</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <p>Buyurtmalar</p>
+                            <h3>0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="productsTab" class="admin-tab">
+                <h2>Mahsulotlarni Boshqarish</h2>
+                <button class="add-product-btn" onclick="addProduct()">+ Yangi Mahsulot</button>
+                <div class="products-table">
+                    <p style="text-align: center; color: #687588; padding: 20px;">Mahsulotlar ro'yxati...</p>
+                </div>
+            </div>
+
+            <div id="ordersTab" class="admin-tab">
+                <h2>Buyurtmalar</h2>
+                <div class="orders-table">
+                    <p style="text-align: center; color: #687588; padding: 20px;">Hozircha buyurtmalar yo'q</p>
+                </div>
+            </div>
+
+            <div id="usersTab" class="admin-tab">
+                <h2>Foydalanuvchilar</h2>
+                <div class="users-table">
+                    <p style="text-align: center; color: #687588; padding: 20px;">Foydalanuvchilar ro'yxati...</p>
+                </div>
+            </div>
+
+            <div id="analyticsTab" class="admin-tab">
+                <h2>Statistika</h2>
+                <div class="analytics-content">
+                    <p style="text-align: center; color: #687588; padding: 20px;">📈 Sotib olish statistikasi</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="profile-content">
+            <button class="close-profile" onclick="closeProfile()">✕</button>
+            
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-info">
+                    <h2 id="profileName">Foydalanuvchi</h2>
+                    <p id="profileEmail">email@example.com</p>
+                </div>
+            </div>
+
+            <div class="profile-tabs">
+                <button class="profile-tab active" onclick="switchProfileTab('orders')">Buyurtmalarim</button>
+                <button class="profile-tab" onclick="switchProfileTab('address')">Manzillar</button>
+                <button class="profile-tab" onclick="switchProfileTab('settings')">Sozlamalar</button>
+            </div>
+
+            <div id="ordersTab" class="profile-section active">
+                <h3>Buyurtma Tarixi</h3>
+                <div class="orders-list">
+                    <p style="text-align: center; color: #687588;">Hozircha buyurtmalar yo'q</p>
+                </div>
+            </div>
+
+            <div id="addressTab" class="profile-section">
+                <h3>Manzillarim</h3>
+                <div class="address-list">
+                    <button class="add-address-btn" onclick="addAddress()">+ Yangi manzil qo'shish</button>
+                </div>
+            </div>
+
+            <div id="settingsTab" class="profile-section">
+                <h3>Sozlamalar</h3>
+                <div class="settings-form">
+                    <label>
+                        <input type="checkbox" checked> Bildirishnomalarni qabul qilish
+                    </label>
+                    <label>
+                        <input type="checkbox" checked> Yangiliklarga obuna bo'lish
+                    </label>
+                    <button class="logout-btn" onclick="logout()">Chiqish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <section class="about-section" id="about">
         <div class="container">
             <h2>Biz haqida</h2>

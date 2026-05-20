@@ -108,6 +108,88 @@ const products = [
         description: "6mm sports yoga mata",
         image: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=300&h=300&fit=crop",
         rating: 4.6
+    },
+    // Yangi kategoriyalar
+    {
+        id: 13,
+        name: "Samsung 4K TV",
+        category: "savdo",
+        price: 8500000,
+        description: "55 inch 4K QLED TV, smart o'yinlari",
+        image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&h=300&fit=crop",
+        rating: 4.7
+    },
+    {
+        id: 14,
+        name: "Refrigerator LG",
+        category: "savdo",
+        price: 4200000,
+        description: "Side-by-side, 650L hajmi, energy efficient",
+        image: "https://images.unsplash.com/photo-1584622281191-c5433f60d4f0?w=300&h=300&fit=crop",
+        rating: 4.8
+    },
+    {
+        id: 15,
+        name: "Washing Machine",
+        category: "savdo",
+        price: 2800000,
+        description: "Avtomatik, 8kg, turbo wash",
+        image: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=300&h=300&fit=crop",
+        rating: 4.5
+    },
+    {
+        id: 16,
+        name: "Sumka Dior",
+        category: "fashion",
+        price: 3500000,
+        description: "Asliy Dior sumi, premium qora",
+        image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300&h=300&fit=crop",
+        rating: 4.9
+    },
+    {
+        id: 17,
+        name: "Adidas Bag",
+        category: "fashion",
+        price: 450000,
+        description: "Ruksak, oq rangi, sport uchun",
+        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop",
+        rating: 4.4
+    },
+    {
+        id: 18,
+        name: "Chiroyli Soat",
+        category: "aksessuarlar",
+        price: 1200000,
+        description: "Erkaklar uchun klassik soat",
+        image: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=300&h=300&fit=crop",
+        rating: 4.8
+    },
+    {
+        id: 19,
+        name: "Gold Halka",
+        category: "aksessuarlar",
+        price: 2500000,
+        description: "18 karat, elliptik shakli",
+        image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300&h=300&fit=crop",
+        rating: 5
+    },
+    {
+        id: 20,
+        name: "Paqetsi Shampun",
+        category: "kosmetika",
+        price: 89000,
+        description: "Tabiiy buyumlar bilan, 500ml",
+        image: "https://images.unsplash.com/photo-1585538326733-dfe971a1c063?w=300&h=300&fit=crop",
+        rating: 4.6
+    },
+    {
+        id: 21,
+        name: "Skin Cream",
+        category: "kosmetika",
+        price: 250000,
+        description: "Anti-aging, hydrating cream",
+        image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=300&h=300&fit=crop",
+        rating: 4.7
     }
 ];
 
@@ -132,14 +214,22 @@ function setupEventListeners() {
 
     document.getElementById('loginForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        showNotification('Muvaffaqiyatli kirildi!');
+        currentUser.isLoggedIn = true;
+        showNotification('✅ Muvaffaqiyatli kirildi!');
         toggleAuth();
+        updateProfileInfo();
     });
 
     document.getElementById('registerForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        showNotification('Ro\'yxatdan muvaffaqiyatli o\'tdingiz!');
+        const name = e.target.querySelector('input[type="text"]').value;
+        const email = e.target.querySelector('input[type="email"]').value;
+        currentUser.name = name;
+        currentUser.email = email;
+        currentUser.isLoggedIn = true;
+        showNotification('✅ Ro\'yxatdan muvaffaqiyatli o\'tdingiz!');
         toggleAuth();
+        updateProfileInfo();
     });
 }
 
@@ -481,3 +571,87 @@ function setupReviewModal() {
         });
     }
 }
+
+// Profile Functions
+let currentUser = {
+    name: 'Abdullayev Ali',
+    email: 'ali@example.com',
+    isLoggedIn: false
+};
+
+function toggleProfile() {
+    if (!currentUser.isLoggedIn) {
+        toggleAuth();
+        return;
+    }
+    document.getElementById('profileModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    updateProfileInfo();
+}
+
+function closeProfile() {
+    document.getElementById('profileModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function updateProfileInfo() {
+    document.getElementById('profileName').textContent = currentUser.name;
+    document.getElementById('profileEmail').textContent = currentUser.email;
+}
+
+function switchProfileTab(tab) {
+    document.querySelectorAll('.profile-tab').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelectorAll('.profile-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
+}
+
+function addAddress() {
+    showNotification('Manzil qo\'shish formasi tez orada!');
+}
+
+function logout() {
+    currentUser.isLoggedIn = false;
+    closeProfile();
+    showNotification('Xayr, shunga o\'tkazdik!');
+}
+
+// Admin Functions (Demo password: admin123)
+function toggleAdmin(password) {
+    const pwd = prompt('Admin parolini kiriting:');
+    if (pwd === 'admin123') {
+        document.getElementById('adminModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    } else if (pwd !== null) {
+        showNotification('Parol noto\'g\'ri!', 'error');
+    }
+}
+
+function closeAdmin() {
+    document.getElementById('adminModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function switchAdmin(tab) {
+    document.querySelectorAll('.admin-nav-item').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelectorAll('.admin-tab').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Tab').classList.add('active');
+}
+
+function addProduct() {
+    showNotification('Yangi mahsulot qo\'shish formasi tez orada!');
+}
+
+// Admin button in console for demo
+window.openAdmin = () => toggleAdmin();
