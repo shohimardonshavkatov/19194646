@@ -88,7 +88,7 @@
                 <strong>Jami:</strong>
                 <span id="totalPrice">0 so'm</span>
             </div>
-            <button class="checkout-btn" onclick="checkout()">Buyurtma berish</button>
+            <button class="checkout-btn" onclick="openPaymentModal()">Buyurtma berish</button>
         </div>
     </div>
 
@@ -134,6 +134,62 @@
             <p>Manzil: Tashkent, O'zbekiston</p>
         </div>
     </section>
+
+    
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-content">
+            <button class="close-payment" onclick="closePayment()">✕</button>
+            <h3>To'lovni amalga oshirish</h3>
+            
+            <div class="payment-methods">
+                <button class="payment-method active" onclick="selectPayment('card')">
+                    💳 Karta orqali
+                </button>
+                <button class="payment-method" onclick="selectPayment('mobile')">
+                    📱 Mobil to'lov
+                </button>
+                <button class="payment-method" onclick="selectPayment('transfer')">
+                    🏦 Bank o'tkazmasi
+                </button>
+            </div>
+
+            <form id="paymentForm" class="payment-form">
+                <div id="cardPayment" class="payment-option active">
+                    <input type="text" placeholder="Karta raqami" maxlength="19" required>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" placeholder="MM/YY" maxlength="5" style="flex: 1;" required>
+                        <input type="text" placeholder="CVV" maxlength="3" style="flex: 1;" required>
+                    </div>
+                    <input type="text" placeholder="Karta egasi" required>
+                </div>
+
+                <div id="mobilePayment" class="payment-option">
+                    <input type="tel" placeholder="+998 XX XXX XX XX" required>
+                    <p style="font-size: 12px; color: #687588; margin-top: 10px;">
+                        Payme, Click, Oson To'lov
+                    </p>
+                </div>
+
+                <div id="transferPayment" class="payment-option">
+                    <p>Bank rekvizitlari:</p>
+                    <p><strong>HUMO:</strong> 9860 1234 5678 9012</p>
+                    <p><strong>UZCARD:</strong> 8600 1234 5678 9012</p>
+                    <p style="font-size: 12px; color: #687588; margin-top: 10px;">
+                        To'lov xat berib, qayta buyurtmani tasdiqlang
+                    </p>
+                </div>
+
+                <div class="payment-total">
+                    <strong>Jami to'lanishi kerak:</strong>
+                    <span id="paymentAmount">0 so'm</span>
+                </div>
+
+                <button type="submit" class="pay-btn">To'lovni tasdiqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <contact-section id="contact">
 
    
     <footer class="footer">

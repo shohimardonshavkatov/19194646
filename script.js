@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCart();
     displayProducts(products);
     setupEventListeners();
+    setupReviewModal();
 });
 
 // Setup Event Listeners
@@ -161,10 +162,15 @@ function displayProducts(productsToDisplay) {
                 <div class="product-category">${product.category}</div>
                 <div class="product-name">${product.name}</div>
                 <div class="product-description">${product.description}</div>
-                <div class="product-rating">${'⭐'.repeat(Math.floor(product.rating))} ${product.rating}</div>
+                <div class="product-rating">
+                    <span class="stars">${'⭐'.repeat(Math.floor(product.rating))}</span>
+                    <span class="rating-value">${product.rating}</span>
+                    <span class="review-count">(${Math.floor(Math.random() * 200) + 5} sharh)</span>
+                </div>
                 <div class="product-price">${product.price.toLocaleString('uz-UZ')} so'm</div>
                 <div class="product-actions">
                     <button class="add-to-cart" onclick="addToCart(${product.id})">Savatchaga qo'sh</button>
+                    <button class="review-btn" onclick="openReview(${product.id})">Sharh qoldirish</button>
                 </div>
             </div>
         `;
@@ -374,4 +380,104 @@ function showNotification(message, type = 'success') {
 
 function scrollToProducts() {
     document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Payment Modal Functions
+function openPaymentModal() {
+    if (cart.length === 0) {
+        showNotification('Savatchа bo\'sh!', 'error');
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    document.getElementById('paymentAmount').textContent = total.toLocaleString('uz-UZ') + ' so\'m';
+    document.getElementById('paymentModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePayment() {
+    document.getElementById('paymentModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function selectPayment(method) {
+    document.querySelectorAll('.payment-method').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.classList.remove('active');
+    });
+
+    event.target.classList.add('active');
+    
+    if (method === 'card') {
+        document.getElementById('cardPayment').classList.add('active');
+    } else if (method === 'mobile') {
+        document.getElementById('mobilePayment').classList.add('active');
+    } else if (method === 'transfer') {
+        document.getElementById('transferPayment').classList.add('active');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const paymentForm = document.getElementById('paymentForm');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const method = document.querySelector('.payment-method.active').textContent.split('\n')[0];
+            
+            alert(`✅ To'lov muvaffaqiyatli amalga oshirildi!\n\nMi'yod: ${method}\nJami: ${total.toLocaleString('uz-UZ')} so'm\n\nRahmat, ShohMarket dan xarid qilganingiz uchun!`);
+            
+            cart = [];
+            saveCart();
+            updateCartUI();
+            closePayment();
+            toggleCart();
+            showNotification('Buyurtma tayyorlanmoqda - 1-2 kun ichida yetkazib beriladi!');
+        });
+    }
+});
+
+// Review Functions
+function openReview(productId) {
+    const product = products.find(p => p.id === productId);
+    document.getElementById('reviewModal').classList.add('active');
+    document.getElementById('reviewModal').dataset.productId = productId;
+    document.body.style.overflow = 'hidden';
+}
+
+function closeReview() {
+    document.getElementById('reviewModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+    document.getElementById('reviewForm').reset();
+}
+
+function setRating(value) {
+    const stars = document.querySelectorAll('.star-rating .star');
+    stars.forEach((star, index) => {
+        if (index < value) {
+            star.classList.add('active');
+        } else {
+            star.classList.remove('active');
+        }
+    });
+    document.getElementById('ratingValue').value = value;
+}
+
+function setupReviewModal() {
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const productId = document.getElementById('reviewModal').dataset.productId;
+            const rating = document.getElementById('ratingValue').value;
+            const text = document.getElementById('reviewText').value;
+            const author = e.target.querySelector('input[type="text"]').value;
+            
+            showNotification(`✅ "${author}" ning sharhi qabul qilindi! Rahmat!`);
+            closeReview();
+        });
+    }
 }
