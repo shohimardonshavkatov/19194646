@@ -78,6 +78,12 @@
                     <option value="name">Nom bo'yicha (A-Z)</option>
                     <option value="rating">Reyting bo'yicha</option>
                 </select>
+                
+                <div class="filter-group">
+                    <label>Narx Oralig'i:</label>
+                    <input type="range" id="priceRange" min="0" max="15000000" step="100000" onchange="filterByPrice()">
+                    <span id="priceValue">0 - 15,000,000 so'm</span>
+                </div>
             </div>
             <div class="products-grid" id="productsGrid">
                 
@@ -94,6 +100,11 @@
             <p class="empty-cart">Savatchа bo'sh</p>
         </div>
         <div class="cart-footer">
+            <div class="coupon-section">
+                <input type="text" id="couponInput" placeholder="Kupon kodini kiriting..." class="coupon-input">
+                <button onclick="applyCoupon()" class="coupon-btn">Qo'llash</button>
+            </div>
+            <div class="discount-display" id="discountDisplay"></div>
             <div class="cart-total">
                 <strong>Jami:</strong>
                 <span id="totalPrice">0 so'm</span>
@@ -256,7 +267,19 @@
         </div>
     </div>
 
-    <section class="about-section" id="about">
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>📧 Yangiliklarga Obuna Bo'ling</h2>
+                <p>Eng yangi mahsulotlar va maxsus takliflarni birinchi bo'lib bilib oling</p>
+                <div class="newsletter-form">
+                    <input type="email" id="newsletterEmail" placeholder="Email manzilingizni kiriting..." required>
+                    <button onclick="subscribeNewsletter()" class="subscribe-btn">Obuna bo'lish</button>
+                </div>
+                <p class="newsletter-note">✓ Spam yubormaymiz, faqat eng muhim yangiliklari</p>
+            </div>
+        </div>
+    </section>
         <div class="container">
             <h2>Biz haqida</h2>
             <p>ShohMarket - Sizning ishonchli onlayn xaridingiz hamrohimiz. Biz eng yaxshi narxlarda sifatli mahsulotlarni taqdim etamiz.</p>

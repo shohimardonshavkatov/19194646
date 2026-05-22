@@ -197,6 +197,7 @@ const products = [
 let cart = [];
 let filteredProducts = [...products];
 let currentCategory = 'all';
+let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -261,6 +262,8 @@ function displayProducts(productsToDisplay) {
                 <div class="product-actions">
                     <button class="add-to-cart" onclick="addToCart(${product.id})">Savatchaga qo'sh</button>
                     <button class="review-btn" onclick="openReview(${product.id})">Sharh qoldirish</button>
+                    <button class="wishlist-btn ${wishlist.includes(product.id) ? 'active' : ''}" onclick="toggleWishlist(${product.id})" title="Sevimlilar">♥</button>
+                    <button class="share-btn" onclick="shareProduct(${product.id})">📤 Ulashish</button>
                 </div>
             </div>
         `;
@@ -387,7 +390,18 @@ function updateCartUI() {
     `).join('');
 
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    totalPrice.textContent = total.toLocaleString('uz-UZ') + ' so\'m';
+    const finalTotal = Math.max(0, total - discountAmount);
+    
+    if (discountAmount > 0) {
+        const discountDisplay = document.getElementById('discountDisplay');
+        discountDisplay.innerHTML = `
+            <div style="color: var(--accent-color); font-weight: 600; margin-bottom: 10px; text-align: center;">
+                -${discountAmount.toLocaleString('uz-UZ')} so'm chegirma ✅
+            </div>
+        `;
+    }
+    
+    totalPrice.textContent = finalTotal.toLocaleString('uz-UZ') + ' so\'m';
 }
 
 // Toggle Cart
@@ -827,3 +841,142 @@ window.addEventListener('load', () => {
     document.getElementById('languageSelect').value = currentLanguage;
     updateLanguage();
 });
+
+// Wishlist Functions
+function toggleWishlist(productId) {
+    const index = wishlist.indexOf(productId);
+    if (index > -1) {
+        wishlist.splice(index, 1);
+        showNotification('❌ Sevimlilardan olib tashlandi');
+    } else {
+        wishlist.push(productId);
+        showNotification('❤️ Sevimlilarni qo\'shildi!');
+    }
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    displayProducts(filteredProducts);
+}
+
+function showWishlist() {
+    const wishlistProducts = products.filter(p => wishlist.includes(p.id));
+    if (wishlistProducts.length === 0) {
+        showNotification('Sevimli mahsulotlar yo\'q', 'error');
+        return;
+    }
+    displayProducts(wishlistProducts);
+    showNotification(`❤️ ${wishlistProducts.length} ta sevimli mahsulot ko'rsatildi`);
+}
+
+// Coupon System
+const coupons = {
+    'FIRST50': { discount: 50000, type: 'fixed', desc: '50,000 so\'m chegirma' },
+    'SALE20': { discount: 20, type: 'percent', desc: '20% chegirma' },
+    'SUMMER10': { discount: 10, type: 'percent', desc: '10% chegirma' },
+    'VIP100': { discount: 100000, type: 'fixed', desc: '100,000 so\'m chegirma' }
+};
+
+let appliedCoupon = null;
+let discountAmount = 0;
+
+function applyCoupon() {
+    const couponCode = document.getElementById('couponInput').value.toUpperCase().trim();
+    
+    if (!couponCode) {
+        showNotification('Kupon kodini kiriting!', 'error');
+        return;
+    }
+    
+    if (coupons[couponCode]) {
+        appliedCoupon = couponCode;
+        const coupon = coupons[couponCode];
+        
+        if (coupon.type === 'percent') {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            discountAmount = Math.floor(total * (coupon.discount / 100));
+        } else {
+            discountAmount = coupon.discount;
+        }
+        
+        showNotification(`✅ "${couponCode}" qo'llandi! ${coupon.desc}`);
+        updateCartUI();
+    } else {
+        showNotification('Kupon kodi noto\'g\'ri!', 'error');
+        appliedCoupon = null;
+        discountAmount = 0;
+    }
+}
+
+// Newsletter Subscription
+let subscribers = JSON.parse(localStorage.getItem('subscribers')) || [];
+
+function subscribeNewsletter() {
+    const email = document.getElementById('newsletterEmail').value.trim();
+    
+    if (!email || !email.includes('@')) {
+        showNotification('To\'g\'ri email kiriting!', 'error');
+        return;
+    }
+    
+    if (subscribers.includes(email)) {
+        showNotification('✓ Siz allaqachon obuna bo\'lgansiz!');
+        return;
+    }
+    
+    subscribers.push(email);
+    localStorage.setItem('subscribers', JSON.stringify(subscribers));
+    document.getElementById('newsletterEmail').value = '';
+    showNotification('✅ Yangiliklarga obuna bo\'ldingiz! Email orqali yangiliklar olasiz.');
+}
+
+// Advanced Price Filter
+function filterByPrice() {
+    const priceRange = document.getElementById('priceRange').value;
+    const priceValue = document.getElementById('priceValue');
+    priceValue.textContent = `0 - ${parseInt(priceRange).toLocaleString('uz-UZ')} so'm`;
+    
+    filteredProducts = products.filter(p => p.price <= priceRange);
+    if (currentCategory !== 'all') {
+        filteredProducts = filteredProducts.filter(p => p.category === currentCategory);
+    }
+    displayProducts(filteredProducts);
+}
+
+// Social Sharing
+function shareProduct(productId) {
+    const product = products.find(p => p.id === productId);
+    const text = `${product.name} - ${product.price.toLocaleString('uz-UZ')} so'm | ShohMarket`;
+    const url = window.location.href;
+    
+    const shareOptions = {
+        'telegram': `https://t.me/share/url?url=${url}&text=${text}`,
+        'facebook': `https://facebook.com/sharer/sharer.php?u=${url}`,
+        'whatsapp': `https://wa.me/?text=${text}`,
+        'twitter': `https://twitter.com/intent/tweet?url=${url}&text=${text}`
+    };
+    
+    showNotification('📤 Ulashish linklar nusxalandi!');
+    console.log('Share links:', shareOptions);
+}
+
+// Product Comparison
+let compareList = [];
+
+function addToCompare(productId) {
+    if (compareList.length >= 3) {
+        showNotification('Maksimum 3 ta mahsulot solishtirish mumkin!', 'error');
+        return;
+    }
+    if (!compareList.includes(productId)) {
+        compareList.push(productId);
+        showNotification('✅ Solishtirishga qo\'shildi!');
+    }
+}
+
+function compareProducts() {
+    if (compareList.length === 0) {
+        showNotification('Solishtirishga mahsulot qo\'shing!', 'error');
+        return;
+    }
+    const comparedProducts = products.filter(p => compareList.includes(p.id));
+    console.log('Comparing products:', comparedProducts);
+    showNotification(`📊 ${compareList.length} ta mahsulot solishtirish uchun tayyoq!`);
+}
